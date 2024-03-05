@@ -4,14 +4,13 @@ from sqlalchemy import ForeignKey, VARCHAR
 from sqlalchemy.dialects.postgresql import MONEY
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List
-from src.models import db
 
 
 class Base(DeclarativeBase):
     pass
 
 
-db = SQLAlchemy(Base)
+db = SQLAlchemy(model_class=Base)
 
 
 class Laptop(db.Model):
