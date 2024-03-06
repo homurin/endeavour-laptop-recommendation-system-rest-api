@@ -1,5 +1,4 @@
 import pandas as pd
-from sqlalchemy.exc import DataError
 from src.models import db, Application as App, Windows as Wind
 
 
