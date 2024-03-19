@@ -7,16 +7,17 @@ from src.models import db, Laptop, Cpu, Gpu, Windows
 def clean_full_specs_dataframe():
     query = db.select(Laptop.id, Laptop.name, Laptop.hddStorage,
                       Laptop.ssdStorage, Laptop.ram, Cpu.baseSpeed,
-                      Cpu.maxSpeed, Cpu.cores, Cpu.threads, Gpu.maxSpeed.label("gpuMaxSpeed"), Gpu.memory.label("gpuMemory"), Gpu.directX, Gpu.openGl, Windows.buildNumber).join(Laptop.cpu).join(Laptop.gpu).join(Laptop.windows)
+                      Cpu.cores, Gpu.maxSpeed.label("gpuMaxSpeed"), Gpu.memory.label("gpuMemory"), Gpu.directX, Gpu.openGl, Windows.buildNumber).join(Laptop.cpu).join(Laptop.gpu).join(Laptop.windows)
 
     df = pd.read_sql(query, con=db.engine)
-    df["storage"] = df["ssdStorage"] + df["hddStorage"]
+    df["totalStorage"] = df["ssdStorage"] + df["hddStorage"]
     return df
 
 
-def calculate_distance(laptops: pd.DataFrame, system_requirements: pd.DataFrame):
+def calculate_distance(laptops: pd.DataFrame, sys_req: pd.DataFrame):
+
     merged_df = pd.concat(
-        [system_requirements, laptops], ignore_index=True)
+        [sys_req, laptops], ignore_index=True)
     normalized = merged_df.apply(zscore)
     norm_spec_req = normalized.values[0].reshape(1, -1)
 
@@ -33,3 +34,46 @@ def calculate_similarity(laptops: pd.DataFrame, index: pd.DataFrame):
     similarity = cosine_similarity(normalized, norm_target)
 
     return similarity
+
+
+def filter_by_app_sysreq(laptops: pd.DataFrame, target: pd.DataFrame):
+    baseSpeed = (laptops["baseSpeed"] >= target["baseSpeed"].values[0])
+    cores = (laptops["cores"] >= target["cores"].values[0])
+    gpuMaxSpeed = (laptops["gpuMaxSpeed"] >= target["gpuMaxSpeed"].values[0])
+    directX = (laptops["directX"] >= target["directX"].values[0])
+    openGl = (laptops["openGl"] >= target["openGl"].values[0])
+    totalStorage = (laptops["totalStorage"] >
+                    target["totalStorage"].values[0])
+    vramFromRam = target["gpuMemory"].values[0] - laptops["gpuMemory"]
+    laptops["vramFromRam"] = vramFromRam
+    laptops.loc[laptops["vramFromRam"] <= 0, "vramFromRam"] = 0
+    ram = (laptops["ram"] >= (
+        target["ram"].values[0] + laptops["vramFromRam"]))
+    buildNumber = (laptops["buildNumber"] >= target["buildNumber"].values[0])
+
+    laptops = laptops.loc[baseSpeed &
+                          cores & gpuMaxSpeed & directX & openGl & ram & totalStorage & buildNumber]
+
+    return laptops
+
+
+def filter_by_laptop_spec(laptops: pd.DataFrame, target: pd.DataFrame):
+    baseSpeed = (laptops["baseSpeed"] >= target["baseSpeed"].values[0])
+    cores = (laptops["cores"] >= target["cores"].values[0])
+    directX = (laptops["directX"] > target["directX"].values[0])
+    openGl = (laptops["openGl"] >= target["openGl"].values[0])
+    gpuMaxSpeed = (laptops["gpuMaxSpeed"] >= target["gpuMaxSpeed"].values[0])
+    hddStorage = (laptops["ssdStorage"] >=
+                  target["ssdStorage"].values[0])
+    ssdStorage = (laptops["hddStorage"] >=
+                  target["hddStorage"].values[0])
+    vramFromRam = target["gpuMemory"].values[0] - laptops["gpuMemory"]
+    laptops["vramFromRam"] = vramFromRam
+    laptops.loc[laptops["vramFromRam"] <= 0, "vramFromRam"] = 0
+    ram = (laptops["ram"] >= (
+        target["ram"].values[0] + laptops["vramFromRam"]))
+    buildNumber = (laptops["buildNumber"] >= target["buildNumber"].values[0])
+    laptops = laptops.loc[baseSpeed &
+                          cores & gpuMaxSpeed & ram & directX & openGl & ssdStorage & hddStorage & buildNumber]
+
+    return laptops
