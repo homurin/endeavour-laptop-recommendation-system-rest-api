@@ -2,4 +2,4 @@ export FLASK_ENV=
 export FLASK_APP=src
 export SECRET_KEY=
 export PYTHONPATH=
-export FLASK_DEBUG=0
+export FLASK_DEBUG=

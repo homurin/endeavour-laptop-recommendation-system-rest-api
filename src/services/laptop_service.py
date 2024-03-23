@@ -1,20 +1,15 @@
 import pandas as pd
-from src.utils import laptop_util as Laptop, application_util as App
+import src.repository.app_repository as App
+import src.repository.laptop_repository as Laptop
 from src.utils.laptop_util import calculate_distance, calculate_similarity
+from src.utils.application_util import calculate_apps_system_requirements
 
 
-def recommendations_by_apps_req(single_task_apps_id: list = [], multi_task_apps_id: list = []):
-    single_task_apps = App.find_by_ids(single_task_apps_id)
-    multi_task_apps = App.find_by_ids(multi_task_apps_id)
+def recommendations_by_apps_req(app_ids: list = []):
+    apps = App.find_by_ids(app_ids)
+    laptops = Laptop.find_all()
 
-    apps_req = App.calculate_apps_system_requirements(
-        single_task_apps, multi_task_apps)
-
-    laptops = Laptop.clean_full_specs_dataframe()
-
-    ssd = laptops["ssdStorage"]
-    hdd = laptops["hddStorage"]
-    laptops["storage"] = ssd + hdd
+    apps_req = calculate_apps_system_requirements(apps)
 
     imps_spec = laptops.drop(
         columns=["id", "name", "hddStorage", "ssdStorage"])
@@ -32,23 +27,21 @@ def recommendations_by_apps_req(single_task_apps_id: list = [], multi_task_apps_
 
 
 def recommendations_by_spec(spec_req: dict):
-    laptops = Laptop.clean_full_specs_dataframe()
-
-    ssd = laptops["ssdStorage"]
-    hdd = laptops["hddStorage"]
-    laptops["storage"] = ssd + hdd
+    laptops = Laptop.find_all()
 
     imps_spec = laptops.drop(
         columns=["id", "name", "hddStorage", "ssdStorage"])
 
-    spec_req_df = pd.DataFrame(
+    spec_req = pd.DataFrame(
         [spec_req], columns=laptops.columns.to_list())
-    ssd_req = spec_req_df["ssdStorage"]
-    hdd_req = spec_req_df["hddStorage"]
-    spec_req_df["storage"] = ssd_req + hdd_req
-    spec_req_df = spec_req_df[imps_spec.columns]
 
-    distances = calculate_distance(imps_spec, spec_req_df)
+    ssd_req = spec_req["ssdStorage"]
+    hdd_req = spec_req["hddStorage"]
+    spec_req["storage"] = ssd_req + hdd_req
+
+    imps_spec_req = spec_req[imps_spec.columns]
+
+    distances = calculate_distance(imps_spec, imps_spec_req)
 
     laptops["distances"] = distances[1:]
 
@@ -60,10 +53,7 @@ def recommendations_by_spec(spec_req: dict):
 
 
 def find_similar(id: str):
-    laptops = Laptop.clean_full_specs_dataframe()
-    ssd = laptops["ssdStorage"]
-    hdd = laptops["hddStorage"]
-    laptops["storage"] = ssd + hdd
+    laptops = Laptop.find_all()
     laptop_target = laptops[laptops["id"] == id]
 
     if len(laptop_target) == 0:
