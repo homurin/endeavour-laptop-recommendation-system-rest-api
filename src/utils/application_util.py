@@ -20,7 +20,7 @@ def calculate_apps_system_requirements(apps=pd.DataFrame({})):
         "gpuMemory": [min_gpu_memory],
         "gpuMaxSpeed": [min_gpu_boost_clock],
         "ram": [min_ram],
-        "storage": [min_storage],
+        "totalStorage": [min_storage],
         "buildNumber": [min_os],
     })
 

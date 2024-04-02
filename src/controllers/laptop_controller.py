@@ -8,20 +8,20 @@ laptop_blueprint = Blueprint(
 
 @laptop_blueprint.route("/recommendations", methods=["POST"])
 def laptop_recommendations_by_apps_req():
-    # try:
-    request_body = request.get_json()
-    app_ids = request_body["app_ids"]
+    try:
+        request_body = request.get_json()
+        app_ids = request_body["app_ids"]
 
-    data = Laptop.recommendations_by_apps_req(app_ids)
-    res = {"status": "success", "data": data}
-    code = 200
-    return (res, code)
-    # except:
-    #     res = {"status": "failed", "message": "invalid request body", "requiredFields": [
-    #         {"app_ids": ["list of app_id"]}
-    #     ]}
-    #     code = 400
-    #     return (res, 400)
+        data = Laptop.recommendations_by_apps_req(app_ids)
+        res = {"status": "success", "data": data}
+        code = 200
+        return (res, code)
+    except:
+        res = {"status": "failed", "message": "invalid request body", "requiredFields": [
+            "app_ids: [list of app_id]"
+        ]}
+        code = 400
+        return (res, 400)
 
 
 @laptop_blueprint.route("/recommendations-by-specs", methods=["POST"])

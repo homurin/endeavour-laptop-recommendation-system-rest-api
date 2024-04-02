@@ -7,6 +7,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class FlaskConfig:
+    CORS_HEADER = "Content-Type"
     SECRET_KEY = os.environ.get("SECRET_KEY")
     DEBUG = os.environ.get("DEBUG")
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URI")

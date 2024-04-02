@@ -47,6 +47,7 @@ class Gpu(db.Model):
     __tablename__ = "Gpu"
     id: Mapped[str] = mapped_column(VARCHAR(36), primary_key=True)
     name: Mapped[str] = mapped_column(VARCHAR(50))
+    baseSpeed: Mapped[float]
     maxSpeed: Mapped[float]
     directX: Mapped[float]
     openGl: Mapped[float]
