@@ -3,8 +3,9 @@ import src.repository.app_repository as App
 import src.repository.laptop_repository as Laptop
 from src.utils.laptop_util import calculate_distance, calculate_similarity, filter_irelevant
 from src.utils.application_util import calculate_apps_system_requirements
+from src.repository.windows_repository import find_windows_by_build_number
 
-dropedColumn = ["id",  "name", "thumb", "cpuName", "cpuBaseSpeed",
+dropedColumn = ["id", "name", "thumb", "cpuName", "cpuBaseSpeed",
                 "gpuName", "gpuBaseSpeed", "hddStorage", "ssdStorage", "windowsName", "osEdition"]
 
 
@@ -14,19 +15,27 @@ def recommendations_by_apps_req(app_ids: list = []):
 
     apps_req = calculate_apps_system_requirements(apps)
 
-    imps_spec = laptops.drop(column=dropedColumn)
+    imps_spec = laptops.drop(columns=dropedColumn)
 
     distances = calculate_distance(imps_spec, apps_req)
 
     laptops["distances"] = distances[1:]
 
     filtered = filter_irelevant(laptops, apps_req)
+
     sorted = filtered.sort_values(by="distances", ascending=True)
     top_laptops = sorted.head(5)
     results = top_laptops.to_dict(orient="records")
     mapped = mapped_results(results)
 
-    return {"spec_req": apps_req.to_dict(orient="records"), "laptops": mapped}
+    app_req_dict = apps_req.to_dict(orient="records")[0]
+    windows = find_windows_by_build_number(
+        app_req_dict["buildNumber"]).to_dict(orient="records")[0]
+
+    windowsName = windows["name"]
+    app_req_dict["windowsName"] = windowsName
+
+    return {"spec_req": app_req_dict, "laptops": mapped}
 
 
 def recommendations_by_spec(spec_req: dict):

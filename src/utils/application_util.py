@@ -13,8 +13,8 @@ def calculate_apps_system_requirements(apps=pd.DataFrame({})):
     min_os = apps["buildNumber"].max()
 
     result = pd.DataFrame({
-        "maxSpeed": [min_cpu_speed],
-        "cores": [min_cpu_cores],
+        "cpuMaxSpeed": [min_cpu_speed],
+        "cpuCores": [min_cpu_cores],
         "directX": [min_direct_x],
         "openGl": [min_open_gl],
         "gpuMemory": [min_gpu_memory],

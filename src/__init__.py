@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from config import AppConfig, FlaskConfig
 from src.controllers import main_blueprint
 from src.models import db
@@ -7,10 +7,10 @@ from src.models import db
 
 def create_app(config_class=FlaskConfig):
     app = Flask(__name__)
+    CORS(app)
     app.json.sort_keys = False
     app.config.from_object(config_class)
     app.register_blueprint(main_blueprint)
-    cors = CORS(app)
     db.init_app(app)
     return app
 
