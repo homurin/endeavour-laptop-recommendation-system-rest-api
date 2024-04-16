@@ -24,7 +24,7 @@ def calculate_similarity(laptops: pd.DataFrame, index: pd.DataFrame):
     return similarity
 
 
-def filter_irelevant(laptops: pd.DataFrame, sys_req: pd.DataFrame) -> pd.DataFrame:
+def filter_irrelevant(laptops: pd.DataFrame, sys_req: pd.DataFrame) -> pd.DataFrame:
     cpuSpeed = (laptops["cpuMaxSpeed"] >= sys_req["cpuMaxSpeed"].values[0])
     cores = (laptops["cpuCores"] >= sys_req["cpuCores"].values[0])
     gpuMaxSpeed = (laptops["gpuMaxSpeed"] >=

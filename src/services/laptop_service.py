@@ -1,7 +1,7 @@
 import pandas as pd
 import src.repository.app_repository as App
 import src.repository.laptop_repository as Laptop
-from src.utils.laptop_util import calculate_distance, calculate_similarity, filter_irelevant
+from src.utils.laptop_util import calculate_distance, calculate_similarity, filter_irrelevant
 from src.utils.application_util import calculate_apps_system_requirements
 from src.repository.windows_repository import find_windows_by_build_number
 
@@ -21,7 +21,7 @@ def recommendations_by_apps_req(app_ids: list = []):
 
     laptops["distances"] = distances[1:]
 
-    filtered = filter_irelevant(laptops, apps_req)
+    filtered = filter_irrelevant(laptops, apps_req)
 
     sorted = filtered.sort_values(by="distances", ascending=True)
     top_laptops = sorted.head(5)
@@ -56,7 +56,7 @@ def recommendations_by_spec(spec_req: dict):
 
     laptops["distances"] = distances[1:]
 
-    filtered = filter_irelevant(laptops, spec_req)
+    filtered = filter_irrelevant(laptops, spec_req)
     sorted = filtered.sort_values(by="distances", ascending=True)
     top_laptops = sorted.head(5)
     results = top_laptops.to_dict(orient="records")
@@ -79,9 +79,9 @@ def find_similar(id: str):
 
     laptops["similarity"] = similarity
 
-    recommendations = laptops.sort_values(by="similarity", ascending=False)
-    top_recom = recommendations.head(6)
-    results = top_recom[top_recom["id"] != id] .to_dict(orient="records")
+    sorted = laptops.sort_values(by="similarity", ascending=False)
+    filtered = sorted[sorted['similarity' >= 0]].head(6)
+    results = filtered[filtered["id"] != id] .to_dict(orient="records")
     mapped = mapped_results(results)
     return mapped
 
