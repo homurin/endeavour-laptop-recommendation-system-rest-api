@@ -1,0 +1,11 @@
+no,name,CPU,GPU,maxSpeed,cores,gpuMaxSpeed,gpuMemory,directX,openGl,ram,SSD,HDD,Windows,buildNumber,Edition
+1,Alienware m15 R3,Intel Core i7-10750H,NVIDIA GeForce RTX 2080 SUPER(Laptop),5.00 ,6.00 ,1740.00 ,8.00 ,12.10 ,4.60 ,32.00 ,1000 ,0,10 ,10240 ,HOME
+2,AORUS 15P,Intel Core i7-11800H,"NVIDIA GeForce RTX 3070 (Laptop, 130W)",4.60 ,8.00 ,1620.00 ,8.00 ,12.20 ,4.60 ,16.00 ,1000.00 ,0,10 ,10240 ,PRO
+3,AORUS 15P,Intel Core i7-11800H,"NVIDIA GeForce RTX 3070 (Laptop, 130W)",4.60 ,8.00 ,1620.00 ,8.00 ,12.20 ,4.60 ,16.00 ,2000.00 ,0,10 ,10240 ,HOME
+4,MSI GP66 Leopard,Intel Core i7-11800H,"NVIDIA GeForce RTX 3070 (Laptop, 130W)",4.60 ,8.00 ,1620.00 ,8.00 ,12.20 ,4.60 ,32.00 ,1000.00 ,0,10 ,10240 ,HOME
+5,MSI Katana 15,Intel Core i7-12650H,"NVIDIA GeForce RTX 4070 (Laptop, 105W) ",4.70 ,10.00 ,2175.00 ,8.00 ,12.20 ,4.60 ,16.00 ,1000.00 ,0,10 ,10240 ,PRO
+6,HP 14 (14-dq1033cl),Intel Core i3-1005G1,Intel UHD Graphics G1,3.40 ,2 ,1100 ,0 ,12.10 ,4.5 ,4 ,128 ,0,10 ,10240 ,HOME
+7,ASUS VivoBook 14,Intel Core i3-1005G1,Intel UHD Graphics G1,3.40 ,2 ,1100 ,0 ,12.10 ,4.5 ,4 ,128 ,0,10 ,10240 ,HOME
+8,Acer Aspire 3,AMD Ryzen 3 3250U,AMD Radeon RX Vega 3,3.50 ,2 ,1200 ,0 ,12.10 ,4.6 ,8 ,512 ,0,10 ,10240 ,HOME
+9,Dell Inspiron 3510,Intel Celeron N4020,Intel UHD Graphics 600,2.80 ,2 ,700 ,0 ,12.10 ,4.4 ,8 ,128 ,0,11 ,22000 ,HOME
+10,HP 14,Intel Celeron N4120,Intel UHD Graphics 600,2.60 ,4 ,700 ,0 ,12.10 ,4.4 ,4 ,64 ,0,10 ,10240 ,S
