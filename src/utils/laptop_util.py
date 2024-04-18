@@ -37,9 +37,7 @@ def filter_irrelevant(laptops: pd.DataFrame, sys_req: pd.DataFrame) -> pd.DataFr
                    sys_req["buildNumber"].values[0])
     vramFromRam = sys_req["gpuMemory"].values[0] - laptops["gpuMemory"]
     laptops["vramFromRam"] = vramFromRam
-
     laptops.loc[laptops["vramFromRam"] <= 0, "vramFromRam"] = 0
-
     ram = (laptops["ram"] >= (
         sys_req["ram"].values[0] + laptops["vramFromRam"]))
 

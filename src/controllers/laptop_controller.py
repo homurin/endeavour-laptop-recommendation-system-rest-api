@@ -1,6 +1,5 @@
 from flask import Blueprint, request
 import src.services.laptop_service as Laptop
-from src.repository.laptop_repository import find_all
 
 laptop_blueprint = Blueprint(
     "laptop", __name__, url_prefix="/api/v1/")
@@ -21,24 +20,6 @@ def laptop_recommendations_by_apps_req():
         ]}
         code = 400
         return (res, 400)
-
-
-@laptop_blueprint.route("/recommendations-by-specs", methods=["POST"])
-def laptop_recommendations_by_req():
-    try:
-        spec_req = request.get_json()
-        data = Laptop.recommendations_by_spec(spec_req)
-        res = {"status": "success", "laptops": data}
-        code = 200
-        return (res, code)
-    except:
-        columns = find_all().columns.to_list()[2:]
-        columns.pop()
-
-        res = {"status": "failed", "message": "invalid request fields",
-               "requiredFields": columns}
-        code = 400
-        return (res, code)
 
 
 @laptop_blueprint.route("/recommendations/<string:laptop_id>", methods=["GET"])

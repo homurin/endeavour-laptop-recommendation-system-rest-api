@@ -38,32 +38,6 @@ def recommendations_by_apps_req(app_ids: list = []):
     return {"spec_req": app_req_dict, "laptops": mapped}
 
 
-def recommendations_by_spec(spec_req: dict):
-    laptops = Laptop.find_all()
-
-    imps_spec = laptops.drop(columns=dropedColumn)
-
-    spec_req = pd.DataFrame(
-        [spec_req], columns=laptops.columns.to_list())
-
-    ssd = spec_req["ssdStorage"]
-    hdd = spec_req["hddStorage"]
-
-    spec_req["totalStorage"] = ssd + hdd
-    imps_spec_req = spec_req[imps_spec.columns]
-
-    distances = calculate_distance(imps_spec, imps_spec_req)
-
-    laptops["distances"] = distances[1:]
-
-    filtered = filter_irrelevant(laptops, spec_req)
-    sorted = filtered.sort_values(by="distances", ascending=True)
-    top_laptops = sorted.head(5)
-    results = top_laptops.to_dict(orient="records")
-
-    return results
-
-
 def find_similar(id: str):
     laptops = Laptop.find_all()
     laptop_target = laptops[laptops["id"] == id]
@@ -80,7 +54,7 @@ def find_similar(id: str):
     laptops["similarity"] = similarity
 
     sorted = laptops.sort_values(by="similarity", ascending=False)
-    filtered = sorted[sorted['similarity' >= 0]].head(6)
+    filtered = sorted[sorted['similarity'] > 0].head(6)
     results = filtered[filtered["id"] != id] .to_dict(orient="records")
     mapped = mapped_results(results)
     return mapped
